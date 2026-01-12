@@ -58,6 +58,16 @@ app.post("/generate", async (req, res) => {
   try {
     const keyword = req.body.keyword || "Korean Style";
     const level = req.body.level;
+
+    console.log("Received request:", { keyword, level }); // ← 이 로그로 확인 필수!
+
+    if (!level || !PROMPT_TEMPLATES[level]) {
+      return res.status(400).json({
+        error:
+          "Invalid or missing level. Must be one of: beginner, salon, advanced",
+      });
+    }
+
     const template = PROMPT_TEMPLATES[level];
 
     const prompt = template.replace("[KEYWORD]", keyword);
