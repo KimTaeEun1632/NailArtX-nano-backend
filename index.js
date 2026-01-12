@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mime = require("mime");
-const { GoogleGenAI } = require("@google/genai");
+const { GoogleGenAI, Modality } = require("@google/genai");
 
 const app = express();
 
@@ -46,7 +46,7 @@ app.post("/generate", async (req, res) => {
     const model = "gemini-3-pro-image-preview";
 
     const config = {
-      responseModalities: ["IMAGE", "TEXT"],
+      responseModalities: [Modality.IMAGE, Modality.TEXT],
       imageConfig: { imageSize: "1K" },
     };
 
