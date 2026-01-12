@@ -57,7 +57,7 @@ A hyper-realistic, high-resolution close-up macro shot of five artificial nails 
 app.post("/generate", async (req, res) => {
   try {
     const keyword = req.body.keyword || "Korean Style";
-    const level = req.body.level;
+    const level = req.body.level || "beginner";
 
     console.log("키워드 확인: ", keyword);
     console.log("레벨 확인: ", level);
@@ -96,7 +96,7 @@ app.post("/generate", async (req, res) => {
       contents,
     });
 
-    console.log("🔄 Streaming image generation...");
+    console.log("🔄 Streaming image generation...", { keyword, level });
 
     let imageBuffer = null;
     let mimeType = null;
