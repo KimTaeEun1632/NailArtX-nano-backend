@@ -38,16 +38,10 @@ const ai = new GoogleGenAI({
   authMode: "API_KEY",
 });
 
-// Nail Art Prompt
-const BASE_PROMPT = `
-A hyper-realistic, high-resolution close-up macro shot of five distinct, trendy artificial nail art designs, created by a professional nail artist. The designs are centered around the theme: [KEYWORD]. Each nail showcases a complex, detailed, and fashionable style using a variety of techniques (e.g., chrome powder, 3D gel, glitter, subtle ombre). The lighting is studio-quality, emphasizing the texture and reflection of the glossy top coat. The background is a clean, modern aesthetic (such as marble or soft beige) to highlight the artistry. Photorealistic, 8k quality, cinematic lighting.
-`.trim();
-
 // /generate API
 app.post("/generate", async (req, res) => {
   try {
-    const keyword = req.body.keyword || "Korean Style";
-    const prompt = BASE_PROMPT.replace("[KEYWORD]", keyword);
+    const prompt = req.body.keyword?.trim();
 
     const model = "gemini-3-pro-image-preview";
 
