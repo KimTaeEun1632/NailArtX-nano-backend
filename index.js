@@ -59,6 +59,9 @@ app.post("/generate", async (req, res) => {
     const keyword = req.body.keyword || "Korean Style";
     const level = req.body.level;
 
+    console.log("키워드 확인: ", keyword);
+    console.log("레벨 확인: ", level);
+
     console.log("Received request:", { keyword, level }); // ← 이 로그로 확인 필수!
 
     if (!level || !PROMPT_TEMPLATES[level]) {
