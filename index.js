@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mime = require("mime");
-const { GoogleGenAI, Modality } = require("@google/genai");
+const { GoogleGenAI } = require("@google/genai");
 
 const app = express();
 
@@ -38,15 +38,34 @@ const ai = new GoogleGenAI({
   authMode: "API_KEY",
 });
 
+// Nail Art Prompt
+const PROMPT_TEMPLATES = {
+  beginner: `
+A realistic, high-resolution close-up macro shot of five artificial nails, suitable for beginner or self nail art. The nail designs are based on the theme: [KEYWORD]. The set may include repeated or similar designs across multiple nails, allowing simple pattern structures. Each nail features easy-to-recreate styles with minimal details, such as solid colors, basic glitter, simple lines, or soft gradients. The lighting is natural and soft, clearly showing the nails without dramatic effects. The background is clean and neutral to keep the focus on practical, achievable nail art. Realistic photography style.
+  `.trim(),
+
+  salon: `
+A high-quality, realistic close-up macro shot of five artificial nails designed for professional salon use. The nail art is inspired by the theme: [KEYWORD]. The set can include a mix of repeated and varied designs, forming natural salon-style patterns rather than strictly unique designs. Each nail displays clean, trendy, and client-ready nail art using moderate techniques such as subtle chrome accents, glitter, ombre, or simple 3D elements. Studio lighting highlights neat finishes and glossy top coats. The background is modern and minimal, suitable for a nail salon portfolio.
+  `.trim(),
+
+  advanced: `
+A hyper-realistic, high-resolution close-up macro shot of five artificial nails created by a professional nail artist. The designs are centered around the theme: [KEYWORD]. The nail set may include both repeated and varied designs, allowing artistic pattern compositions across the five nails. Each nail showcases complex, detailed, and fashionable nail art using advanced techniques such as chrome powder, layered 3D gel, glitter, and refined ombre effects. Studio-quality cinematic lighting emphasizes texture, depth, and glossy reflections. The background is a clean, modern aesthetic (such as marble or soft beige) to highlight artistic expression. Photorealistic, 8k quality.
+  `.trim(),
+};
+
 // /generate API
 app.post("/generate", async (req, res) => {
   try {
-    const prompt = req.body.keyword?.trim();
+    const keyword = req.body.keyword || "Korean Style";
+    const level = req.body.level;
+    const template = PROMPT_TEMPLATES[level];
+
+    const prompt = template.replace("[KEYWORD]", keyword);
 
     const model = "gemini-3-pro-image-preview";
 
     const config = {
-      responseModalities: [Modality.IMAGE, Modality.TEXT],
+      responseModalities: ["IMAGE", "TEXT"],
       imageConfig: { imageSize: "1K" },
     };
 
